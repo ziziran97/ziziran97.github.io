@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ziziran.com</id>
     <title>孜孜然</title>
-    <updated>2021-11-19T08:20:39.358Z</updated>
+    <updated>2021-11-19T10:34:40.285Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ziziran.com"/>
     <link rel="self" href="https://ziziran.com/atom.xml"/>
@@ -10,6 +10,35 @@
     <logo>https://ziziran.com/images/avatar.png</logo>
     <icon>https://ziziran.com/favicon.ico</icon>
     <rights>All rights reserved 2021, 孜孜然</rights>
+    <entry>
+        <title type="html"><![CDATA[费曼学习法]]></title>
+        <id>https://ziziran.com/post/fei-man-xue-xi-fa/</id>
+        <link href="https://ziziran.com/post/fei-man-xue-xi-fa/">
+        </link>
+        <updated>2021-11-19T10:29:54.000Z</updated>
+        <content type="html"><![CDATA[<p>主要包含四个步骤：</p>
+<ul>
+<li>确定目标</li>
+<li>模拟教学
+<ul>
+<li>自己能否将问题讲明白</li>
+<li>讲课的时候什么地方卡壳</li>
+<li>什么地方将混淆了</li>
+</ul>
+</li>
+<li>反馈
+<ul>
+<li>问听众哪里没听懂</li>
+</ul>
+</li>
+<li>简化并重复
+<ul>
+<li>理解和简化，然后简单类比</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://ziziran.com/post/hello-gridea/</id>
