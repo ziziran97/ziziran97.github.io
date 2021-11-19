@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ziziran.com</id>
     <title>孜孜然</title>
-    <updated>2021-11-19T10:41:57.934Z</updated>
+    <updated>2021-11-19T10:43:10.365Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ziziran.com"/>
     <link rel="self" href="https://ziziran.com/atom.xml"/>
@@ -35,6 +35,7 @@
 <p>最大限度地概括</p>
 <h3 id="3提问与扩充回答">3.提问与扩充回答</h3>
 <h3 id="4对照与反复">4.对照与反复</h3>
+<p>相关书籍：<a href="">《Learn More Study Less 如何高效学习》</a></p>
 ]]></content>
     </entry>
     <entry>
