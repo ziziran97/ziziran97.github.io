@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#181b1d">
+  <title>ORBIT / 24 轨道咔哒币 — Ziziran Play</title>
+  <meta name="description" content="一个可以转、听、拆开的数字解压玩具。拖动外圈，体验齿轮联动、棘轮咔哒与自由旋转。手机和电脑都能玩。">
+  <meta property="og:title" content="ORBIT / 24 · 来拨一圈">
+  <meta property="og:description" content="转动、咔哒、拆开。一个能在网页里玩的轨道解压币。">
+  <meta property="og:image" content="https://ziziran97.github.io/orbit-24/assets/orbit-cover.webp">
+  <meta property="og:url" content="https://ziziran97.github.io/orbit-24/">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://ziziran97.github.io/orbit-24/">
+  <link rel="icon" href="./assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="./style.css?v=1">
+  <script src="./app.js?v=1" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="../" aria-label="返回孜孜然首页">ZIZIRAN <span>/ PLAY</span></a>
+    <div class="header-actions"><span class="edition">DIGITAL OBJECT 001</span><button type="button" class="quiet-button" id="theme-toggle" aria-pressed="false">浅色模式</button></div>
+  </header>
+  <main id="orbit-click-play">
+    <div class="play-layout">
+      <section class="object-view" aria-labelledby="object-title">
+        <div class="object-heading"><h1 id="object-title">ORBIT <span>/ 24</span></h1><span class="object-category">KINETIC FIDGET</span></div>
+        <div class="orbit-stage" role="img" aria-label="可互动的轨道咔哒币。逆时针拖动外圈拨动，拖动空白处旋转视角。下方按钮也可操作。" aria-describedby="gesture-help">
+          <canvas aria-hidden="true"></canvas>
+          <div class="load-state"><div class="loading-ring" aria-hidden="true"></div><p class="orbit-loading" role="status">正在准备你的解压币…</p><button type="button" class="quiet-button" id="retry-load" hidden>重新加载</button></div>
+          <noscript><div class="no-script">开启浏览器的 JavaScript 后就能拨动它。</div></noscript>
+        </div>
+        <div class="stage-footer"><p id="gesture-help">逆时针拖动外圈<span> · </span>拖动空白处换角度</p><button type="button" class="quiet-button" data-action="view" aria-pressed="false" disabled>俯视</button></div>
+      </section>
+      <aside class="control-panel" aria-label="玩具控制">
+        <div class="panel-intro"><span class="eyebrow">来拨一圈</span><h2>轨道咔哒币</h2><p>转动外圈，让三颗小齿轮<br class="desktop-break">一起转起来。</p></div>
+        <div class="mode-line"><span class="mode-dot" aria-hidden="true"></span><p data-status aria-live="polite">棘轮 · 逆时针 · 24 格 / 圈</p></div>
+        <div class="primary-actions"><button type="button" class="action-button primary" data-action="step" disabled><span>拨一格</span><span aria-hidden="true">+15°</span></button><button type="button" class="action-button" data-action="flick" disabled>拨快一点</button></div>
+        <div class="secondary-actions"><button type="button" class="action-button" data-action="mode" aria-pressed="false" disabled>解锁旋转</button><button type="button" class="action-button" data-action="explode" aria-pressed="false" disabled>展开零件</button></div>
+        <div class="settings-line"><label class="sound-switch"><input type="checkbox" data-control="sound" checked disabled><span class="switch-track" aria-hidden="true"></span><span>咔哒声</span></label><button type="button" class="quiet-button" data-action="reset" disabled>复位</button></div>
+        <div class="keyboard-hint"><kbd>空格</kbd><span>拨一格</span><kbd>F</kbd><span>切换模式</span></div>
+        <details class="play-help"><summary>怎么玩</summary><div><p><strong>棘轮模式</strong>：逆时针拨动，逐格咔哒。顺时针会止住。</p><p><strong>自由旋转</strong>：点“解锁旋转”，两边都能转；快速拨动后松手，会靠惯性继续转。</p><p><strong>展开零件</strong>：看清齿轮、支架与底部棘爪。空白处可以拖动换视角。</p><p>键盘：空格 / → 拨动，F 切换模式，E 展开，V 切换视角，M 开关声音，R 复位。</p></div></details>
+      </aside>
+    </div>
+    <footer class="page-footer"><span>一点机械趣味，一小段放空时间。</span><span>Designed by Ziziran<span class="footer-separator"> / </span><span>数字解压玩具</span></span></footer>
+  </main>
+</body>
+</html>
