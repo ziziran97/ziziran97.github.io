@@ -63,14 +63,37 @@ document.getElementById('retry-load').addEventListener('click',()=>location.relo
     }
     const STEP=Math.PI/12,TAU=Math.PI*2;
     let theta=0,velocity=0,target=null,free=false,explode=0,explodeTarget=0,top=false,dirty=true,raf=0;
-    let yaw=-Math.PI/2+.28,pitch=.96,down=null,lastTick=0,lastTime=performance.now(),soundTime=0;
-    let ctx=null;
+    let yaw=-Math.PI/2+.28,pitch=.96,down=null,lastTick=0,lastTime=performance.now(),soundTime=-Infinity;
+    let ctx=null,clickBuffer=null;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     function unlockAudio(){if(!root.querySelector('[data-control="sound"]').checked)return;try{ctx??=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}catch(_){}}
+    function getClickBuffer(){
+      if(clickBuffer)return clickBuffer;
+      const duration=.026,rate=ctx.sampleRate;
+      clickBuffer=ctx.createBuffer(1,Math.ceil(rate*duration),rate);
+      const samples=clickBuffer.getChannelData(0);
+      const cutoff=1-Math.exp(-2*Math.PI*6000/rate);
+      let seed=24,previous=0,noiseA=0,noiseB=0;
+      for(let i=0;i<samples.length;i++){
+        const t=i/rate;
+        seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+        const noise=seed/2147483648-1,high=(noise-.8*previous)*.55;previous=noise;
+        noiseA+=cutoff*(high-noiseA);noiseB+=cutoff*(noiseA-noiseB);
+        // A sharp contact transient and brief metal resonances, without a pitch sweep.
+        const attack=1-Math.exp(-t/.00008),tail=Math.min(1,(duration-t)/.002);
+        const contact=.62*noiseB*Math.exp(-t/.0013);
+        const metal=.26*Math.sin(2*Math.PI*4100*t)*Math.exp(-t/.0042)
+          +.14*Math.sin(2*Math.PI*6700*t)*Math.exp(-t/.006)
+          +.12*Math.sin(2*Math.PI*2250*t)*Math.exp(-t/.0023);
+        samples[i]=.30*attack*tail*(contact+metal);
+      }
+      return clickBuffer;
+    }
     function clickSound(){
       if(!ctx||free||!root.querySelector('[data-control="sound"]').checked)return;
       const t=ctx.currentTime;if(t-soundTime<.032)return;soundTime=t;
-      const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='triangle';osc.frequency.setValueAtTime(1550,t);osc.frequency.exponentialRampToValueAtTime(400,t+.025);gain.gain.setValueAtTime(.07,t);gain.gain.exponentialRampToValueAtTime(.001,t+.036);osc.connect(gain).connect(ctx.destination);osc.start(t);osc.stop(t+.04)
+      const source=ctx.createBufferSource();source.buffer=getClickBuffer();source.connect(ctx.destination);
+      source.onended=()=>source.disconnect();source.start(t);
     }
     function stateText(){status.textContent=(free?'自由旋转 · 可双向拨动':'棘轮 · 逆时针 · 24 格 / 圈')+(explodeTarget?' · 装配展开':'');root.dataset.mode=free?'free':'ratchet';root.dataset.exploded=String(explodeTarget)}
     function toggleMode(){free=!free;velocity=0;target=null;const b=root.querySelector('[data-action="mode"]');b.setAttribute('aria-pressed',String(free));b.textContent=free?'切回棘轮':'解锁旋转';stateText();dirty=true}
