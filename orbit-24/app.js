@@ -5,6 +5,32 @@ function applyTheme(value){const dark=value!=='light';document.documentElement.d
 applyTheme(themeChoice);themeButton.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 const soundCheckbox=document.querySelector('[data-control="sound"]');try{soundCheckbox.checked=localStorage.getItem('orbit24-sound')!=='off'}catch(_){}
 soundCheckbox.addEventListener('change',()=>{try{localStorage.setItem('orbit24-sound',soundCheckbox.checked?'on':'off')}catch(_){}});
+// API availability cannot confirm whether the device has a working vibration motor.
+const haptics=(()=>{
+  const checkbox=document.querySelector('[data-control="vibration"]');
+  const hint=document.getElementById('vibration-hint');
+  const available=typeof navigator.vibrate==='function';
+  let lastPulse=-Infinity,requested=false;
+  try{checkbox.checked=available&&localStorage.getItem('orbit24-vibration')==='on'}catch(_){}
+  function save(){try{localStorage.setItem('orbit24-vibration',checkbox.checked?'on':'off')}catch(_){}}
+  function describe(){hint.textContent=available?(checkbox.checked?'每次咔哒轻震一下；需设备支持。':'开启后，每次咔哒轻震一下。'):'此浏览器不支持震动，可继续听咔哒声。'}
+  function stop(){if(requested){try{navigator.vibrate(0)}catch(_){}requested=false}lastPulse=-Infinity}
+  function pulse(){
+    if(!available||!checkbox.checked||document.hidden||navigator.userActivation?.hasBeenActive===false)return;
+    const now=performance.now();if(now-lastPulse<45)return;lastPulse=now;
+    try{
+      if(navigator.vibrate(10)!==false){requested=true;return}
+    }catch(_){}
+    stop();checkbox.checked=false;save();
+    hint.textContent='浏览器未允许震动，可换安卓 Chrome 再试。';
+  }
+  checkbox.addEventListener('change',()=>{save();describe();if(checkbox.checked)pulse();else stop()});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
+  window.addEventListener('pagehide',stop);
+  describe();
+  return {available,pulse,stop};
+})();
+
 document.getElementById('retry-load').addEventListener('click',()=>location.reload());
 
 (async function(){
@@ -95,9 +121,10 @@ document.getElementById('retry-load').addEventListener('click',()=>location.relo
       const source=ctx.createBufferSource();source.buffer=getClickBuffer();source.connect(ctx.destination);
       source.onended=()=>source.disconnect();source.start(t);
     }
+    function detentFeedback(){if(free)return;clickSound();haptics.pulse()}
     function stateText(){status.textContent=(free?'自由旋转 · 可双向拨动':'棘轮 · 逆时针 · 24 格 / 圈')+(explodeTarget?' · 装配展开':'');root.dataset.mode=free?'free':'ratchet';root.dataset.exploded=String(explodeTarget)}
-    function toggleMode(){free=!free;velocity=0;target=null;const b=root.querySelector('[data-action="mode"]');b.setAttribute('aria-pressed',String(free));b.textContent=free?'切回棘轮':'解锁旋转';stateText();dirty=true}
-    root.querySelector('[data-action="step"]').addEventListener('click',()=>{unlockAudio();velocity=0;target=(Math.floor(Math.max(theta,target??theta)/STEP+1e-5)+1)*STEP;if(reduced){theta=target;target=null;clickSound()}dirty=true});
+    function toggleMode(){haptics.stop();free=!free;velocity=0;target=null;const b=root.querySelector('[data-action="mode"]');b.setAttribute('aria-pressed',String(free));b.textContent=free?'切回棘轮':'解锁旋转';stateText();dirty=true}
+    root.querySelector('[data-action="step"]').addEventListener('click',()=>{unlockAudio();velocity=0;target=(Math.floor(Math.max(theta,target??theta)/STEP+1e-5)+1)*STEP;if(reduced){theta=target;target=null;lastTick=Math.floor(theta/STEP+.5);detentFeedback()}dirty=true});
     root.querySelector('[data-action="flick"]').addEventListener('click',()=>{unlockAudio();target=null;velocity=free?11:8;dirty=true});
     root.querySelector('[data-action="mode"]').addEventListener('click',()=>{unlockAudio();toggleMode()});
     root.querySelector('[data-action="explode"]').addEventListener('click',e=>{explodeTarget=1-explodeTarget;e.currentTarget.setAttribute('aria-pressed',String(!!explodeTarget));e.currentTarget.textContent=explodeTarget?'合上零件':'展开零件';if(reduced)explode=explodeTarget;stateText();dirty=true});
@@ -139,7 +166,7 @@ document.getElementById('retry-load').addEventListener('click',()=>location.relo
       if(!down&&Math.abs(velocity)>.01){theta+=velocity*dt;velocity*=Math.exp(-(free?1.65:4.2)*dt);dirty=true;if(!free&&velocity<.03){velocity=0;target=Math.ceil(theta/STEP)*STEP}}
       if(target!==null){const d=target-theta;if(Math.abs(d)<.0003){theta=target;target=null}else theta+=d*Math.min(1,dt*22);dirty=true}
       if(Math.abs(explode-explodeTarget)>.001){explode+=(explodeTarget-explode)*Math.min(1,dt*10);dirty=true}else if(explode!==explodeTarget){explode=explodeTarget;dirty=true}
-      const tick=Math.floor(theta/STEP+.5);if(tick!==lastTick){clickSound();lastTick=tick}
+      const tick=Math.floor(theta/STEP+.5);if(tick!==lastTick){detentFeedback();lastTick=tick}
       if(dirty){pose();renderer.render(scene,camera);dirty=false}
       if(Math.abs(velocity)>.01||target!==null||Math.abs(explode-explodeTarget)>.001||dirty)raf=requestAnimationFrame(animate);else raf=0;
     }
@@ -149,7 +176,7 @@ document.getElementById('retry-load').addEventListener('click',()=>location.relo
     window.addEventListener('pagehide',()=>{if(raf)cancelAnimationFrame(raf);raf=0;ctx?.suspend()});
     window.addEventListener('pageshow',wake);
     root.querySelector('[data-action="reset"]').addEventListener('click',()=>{
-      theta=0;velocity=0;target=null;free=false;explode=0;explodeTarget=0;top=false;down=null;lastTick=0;yaw=-Math.PI/2+.28;pitch=.96;
+      haptics.stop();theta=0;velocity=0;target=null;free=false;explode=0;explodeTarget=0;top=false;down=null;lastTick=0;yaw=-Math.PI/2+.28;pitch=.96;
       const mode=root.querySelector('[data-action="mode"]');mode.textContent='解锁旋转';mode.setAttribute('aria-pressed','false');
       const exp=root.querySelector('[data-action="explode"]');exp.textContent='展开零件';exp.setAttribute('aria-pressed','false');
       const view=root.querySelector('[data-action="view"]');view.textContent='俯视';view.setAttribute('aria-pressed','false');stateText();wake();
@@ -163,6 +190,6 @@ document.getElementById('retry-load').addEventListener('click',()=>location.relo
     });
     canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;loading.textContent='画面暂时中断了，重新加载就能继续玩。';stage.append(overlay);overlay.querySelector('.loading-ring').hidden=true;document.getElementById('retry-load').hidden=false;root.dataset.ready='false'});
     theme();new MutationObserver(theme).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
-    stateText();overlay.remove();root.querySelectorAll('[data-action],[data-control]').forEach(el=>el.disabled=false);root.dataset.ready='true';wake();
+    stateText();overlay.remove();root.querySelectorAll('[data-action],[data-control]').forEach(el=>el.disabled=el.dataset.control==='vibration'&&!haptics.available);root.dataset.ready='true';wake();
   }catch(error){loading.textContent=error.name==='TimeoutError'?'加载有点慢，请检查网络后重试。':error.message.includes('WebGL')?'当前浏览器无法显示三维画面，请换 Chrome、Edge 或 Safari 试试。':error.message;loading.setAttribute('role','alert');overlay.querySelector('.loading-ring').hidden=true;document.getElementById('retry-load').hidden=false;root.dataset.error=error.message;console.error(error)}
 })();

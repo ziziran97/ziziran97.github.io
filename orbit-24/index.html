@@ -13,8 +13,8 @@
   <meta name="color-scheme" content="dark light">
   <link rel="canonical" href="https://ziziran97.github.io/orbit-24/">
   <link rel="icon" href="./assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="./style.css?v=1">
-  <script src="./app.js?v=2" defer></script>
+  <link rel="stylesheet" href="./style.css?v=3">
+  <script src="./app.js?v=3" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -37,7 +37,8 @@
         <div class="mode-line"><span class="mode-dot" aria-hidden="true"></span><p data-status aria-live="polite">棘轮 · 逆时针 · 24 格 / 圈</p></div>
         <div class="primary-actions"><button type="button" class="action-button primary" data-action="step" disabled><span>拨一格</span><span aria-hidden="true">+15°</span></button><button type="button" class="action-button" data-action="flick" disabled>拨快一点</button></div>
         <div class="secondary-actions"><button type="button" class="action-button" data-action="mode" aria-pressed="false" disabled>解锁旋转</button><button type="button" class="action-button" data-action="explode" aria-pressed="false" disabled>展开零件</button></div>
-        <div class="settings-line"><label class="sound-switch"><input type="checkbox" data-control="sound" checked disabled><span class="switch-track" aria-hidden="true"></span><span>咔哒声</span></label><button type="button" class="quiet-button" data-action="reset" disabled>复位</button></div>
+        <div class="settings-line"><div class="feedback-switches"><label class="sound-switch"><input type="checkbox" data-control="sound" checked disabled><span class="switch-track" aria-hidden="true"></span><span>咔哒声</span></label><label class="sound-switch"><input type="checkbox" data-control="vibration" aria-describedby="vibration-hint" disabled><span class="switch-track" aria-hidden="true"></span><span>震动</span></label></div><button type="button" class="quiet-button" data-action="reset" disabled>复位</button></div>
+        <p class="feedback-hint" id="vibration-hint" aria-live="polite">震动需要手机与浏览器支持。</p>
         <div class="keyboard-hint"><kbd>空格</kbd><span>拨一格</span><kbd>F</kbd><span>切换模式</span></div>
         <details class="play-help"><summary>怎么玩</summary><div><p><strong>棘轮模式</strong>：逆时针拨动，逐格咔哒。顺时针会止住。</p><p><strong>自由旋转</strong>：点“解锁旋转”，两边都能转；快速拨动后松手，会靠惯性继续转。</p><p><strong>展开零件</strong>：看清齿轮、支架与底部棘爪。空白处可以拖动换视角。</p><p>键盘：空格 / → 拨动，F 切换模式，E 展开，V 切换视角，M 开关声音，R 复位。</p></div></details>
       </aside>
