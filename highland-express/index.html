@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#eae8dc" />
+    <meta
+      name="description"
+      content="A living miniature of the Scottish Highlands. Explore a fully procedural steam railway, stone viaduct and sweeping Highland valley."
+    />
+    <title>Highland Express — A journey worth slowing down for</title>
+    <script type="module" crossorigin src="./assets/index-DHcvYPUr.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-ct63ogE3.css">
+  </head>
+  <body>
+    <div
+      id="scene"
+      aria-label="Interactive three-dimensional Highland steam railway"
+    ></div>
+    <div id="loading">
+      <span class="loading-mark">H<span>×</span>E</span>
+      <p>Preparing your Highland escape<span class="loading-dots">…</span></p>
+      <small>BUILDING A LITTLE WORLD, ONE STONE AT A TIME</small>
+    </div>
+    <div id="error" hidden>
+      <h2>A little interruption on the line.</h2>
+      <p id="error-message"></p>
+      <button onclick="location.reload()">Try again</button>
+    </div>
+    <header class="masthead">
+      <a class="wordmark" href="./" aria-label="Highland Express home"
+        ><svg viewBox="0 0 44 44" aria-hidden="true">
+          <path
+            d="M3 29 14 12l8 12 6-9 13 17M8 32h28M18 32v-6h10v6M20 26v-4h6v4"
+          />
+          <path d="M22 17c-6-5 6-5 0-10" /></svg
+        ><span>HIGHLAND<br /><strong>EXPRESS</strong></span></a
+      >
+      <div class="edition">
+        A LIVING MINIATURE<span>SCOTLAND · EST. 1893</span>
+      </div>
+      <button
+        id="about"
+        class="icon-button"
+        aria-label="About this experience"
+        title="About this experience"
+      >
+        <span class="info-icon">i</span>
+      </button>
+    </header>
+    <aside class="scene-label">
+      <span class="live-dot"></span> THE HIGHLANDS, AT YOUR OWN PACE
+    </aside>
+    <main class="intro">
+      <div class="eyebrow"><span></span> THE WEST HIGHLAND LINE</div>
+      <h1>A journey worth<br /><em>slowing down for.</em></h1>
+      <p>
+        Through emerald hills and drifting steam.<br />A little world. An
+        endless escape.
+      </p>
+      <div class="location">
+        <svg viewBox="0 0 20 20">
+          <path d="M15.5 8c0 4-5.5 9-5.5 9S4.5 12 4.5 8a5.5 5.5 0 1 1 11 0Z" />
+          <circle cx="10" cy="8" r="1.8" />
+        </svg>
+        GLENFINNAN VIADUCT <span>56°52′N 5°25′W</span>
+      </div>
+    </main>
+    <div class="compass" aria-hidden="true">
+      <span>N</span
+      ><svg viewBox="0 0 54 54">
+        <circle cx="27" cy="27" r="23" />
+        <path d="m27 10 5 17-5 17-5-17Z" />
+        <path d="M6 27h8m26 0h8M27 3v5m0 38v5" />
+      </svg>
+    </div>
+    <div class="view-caption">
+      <span id="shot-name">01 / THE GREAT CROSSING</span
+      ><span id="view-hint">A CINEMATIC JOURNEY THROUGH THE HIGHLANDS</span>
+    </div>
+    <footer class="console">
+      <div class="transport">
+        <button
+          id="play"
+          class="play-button"
+          aria-label="Pause train"
+          title="Pause / play (Space)"
+        >
+          <svg id="play-icon" viewBox="0 0 20 20">
+            <path d="M7 5v10M13 5v10" />
+          </svg>
+        </button>
+        <div class="transport-text">
+          <span id="running-label">ON THE MOVE</span
+          ><strong>Highland Express <span>No. 5972</span></strong>
+        </div>
+      </div>
+      <div class="console-divider"></div>
+      <div class="camera-modes" role="group" aria-label="Camera mode">
+        <button data-camera="cinematic" class="active" aria-pressed="true">
+          <svg viewBox="0 0 20 20">
+            <rect x="3" y="6" width="10" height="9" rx="1" />
+            <path d="m13 9 4-2v8l-4-2M4 3h2m2 0h2" /></svg
+          ><span>Cinematic</span></button
+        ><button data-camera="follow" aria-pressed="false">
+          <svg viewBox="0 0 20 20">
+            <path d="M4 7V4h3m6 0h3v3m0 6v3h-3m-6 0H4v-3" />
+            <circle cx="10" cy="10" r="3" /></svg
+          ><span>Follow train</span></button
+        ><button data-camera="explore" aria-pressed="false">
+          <svg viewBox="0 0 20 20">
+            <ellipse
+              cx="10"
+              cy="10"
+              rx="8"
+              ry="4"
+              transform="rotate(-30 10 10)"
+            />
+            <path d="m11 6-4 7 7-4-3-3Z" /></svg
+          ><span>Explore</span>
+        </button>
+      </div>
+      <div class="console-divider optional"></div>
+      <label class="speed-control" for="speed"
+        ><span>PACE <output id="speed-value">1×</output></span
+        ><input
+          id="speed"
+          type="range"
+          min="0.25"
+          max="2"
+          step="0.25"
+          value="1"
+          aria-label="Train speed"
+      /></label>
+      <div class="console-divider optional"></div>
+      <div class="utilities">
+        <button
+          id="sound"
+          class="icon-button"
+          aria-label="Enable sound"
+          title="Toggle synthesized sound (M)"
+        >
+          <svg viewBox="0 0 20 20">
+            <path d="M9 4 5 7H2v6h3l4 3V4Zm4 4 4 4m0-4-4 4" />
+          </svg></button
+        ><button
+          id="fullscreen"
+          class="icon-button"
+          aria-label="Enter fullscreen"
+          title="Fullscreen (F)"
+        >
+          <svg viewBox="0 0 20 20">
+            <path d="M7 3H3v4m10-4h4v4m0 6v4h-4m-6 0H3v-4" />
+          </svg>
+        </button>
+      </div>
+      <div class="route-progress"><div id="progress"></div></div>
+    </footer>
+    <div class="bottom-note">
+      <span>CRAFTED ENTIRELY IN CODE</span
+      ><span id="scene-time">LATE AFTERNOON · 16:42</span
+      ><span>DRAG TO ORBIT <i>·</i> SCROLL TO EXPLORE</span>
+    </div>
+    <dialog id="about-dialog">
+      <button id="close-about" class="icon-button" aria-label="Close about">
+        ×
+      </button>
+      <div class="eyebrow">A SMALL WORLD, MADE WITH CARE</div>
+      <h2>Welcome aboard.</h2>
+      <p>
+        Take the scenic route through a reimagined Scottish Highlands. Every
+        stone, spoke, hillside and wisp of steam is generated entirely in code.
+      </p>
+      <dl>
+        <dt>Cinematic</dt>
+        <dd>A six-shot journey, from the valley to the moving machinery.</dd>
+        <dt>Follow train</dt>
+        <dd>Travel alongside the locomotive.</dd>
+        <dt>Explore</dt>
+        <dd>
+          Drag to orbit, scroll to zoom, right-drag to pan. Touch: one finger to
+          orbit, two to zoom.
+        </dd>
+      </dl>
+      <p class="dialog-note">
+        Space: pause · 1–3: camera · M: sound · F: fullscreen<br />A fictional
+        miniature inspired by Glenfinnan. Three.js + TypeScript.
+      </p>
+      <button id="reset" class="primary-button">
+        Begin the journey again <span>↗</span>
+      </button>
+    </dialog>
+  </body>
+</html>
